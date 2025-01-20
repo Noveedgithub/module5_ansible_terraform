@@ -1,0 +1,28 @@
+---
+- name: Ensure required packages are installed
+  ansible.builtin.package:
+    name:
+      - curl
+      - wget
+    state: present
+
+- name: Get the latest stable version of kubectl
+  ansible.builtin.shell: |
+    curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt
+  register: kubectl_version
+
+- name: Download the kubectl binary
+  ansible.builtin.get_url:
+    url: "https://storage.googleapis.com/kubernetes-release/release/{{ kubectl_version.stdout }}/bin/linux/amd64/kubectl"
+    dest: /usr/local/bin/kubectl
+    mode: '0755'
+
+- name: Verify kubectl installation
+  ansible.builtin.command: kubectl version --client
+  register: kubectl_version_check
+  failed_when: "'Client Version' not in kubectl_version_check.stdout"
+  changed_when: false
+
+- name: Display installed kubectl version
+  ansible.builtin.debug:
+    msg: "Installed kubectl version: {{ kubectl_version_check.stdout }}"
