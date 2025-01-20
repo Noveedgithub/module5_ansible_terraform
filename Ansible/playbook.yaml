@@ -17,6 +17,7 @@
         state: present
 
     - name: Add Jenkins user to Docker group
+      become: yes
       user:
         name: jenkins
         group: docker
@@ -28,6 +29,7 @@
         state: present
 
     - name: Add Docker user to Jenkins group
+      become: yes
       user:
         name: docker
         group: jenkins
@@ -50,4 +52,4 @@
   become: yes
   roles:
     - kubectl
-      
+  
