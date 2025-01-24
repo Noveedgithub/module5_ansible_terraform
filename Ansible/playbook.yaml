@@ -1,5 +1,5 @@
 - name: Installation and Configuration
-  hosts: wsl_ubuntu
+  hosts: target
   become: true
 
   tasks:
@@ -48,7 +48,7 @@
       notify: restart docker
 
 - name: Install kubectl using the kubectl role
-  hosts: wsl_ubuntu
+  hosts: target
   become: yes
   roles:
     - kubectl
